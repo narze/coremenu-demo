@@ -4,6 +4,7 @@
   <title>ขอเมนู</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-clipboard2@0.3.1/dist/vue-clipboard.js"></script>
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
@@ -23,11 +24,40 @@
     </div>
 
     <div class="bg-gray-200 px-4 pb-4">
-      <button v-on:click="finalize" class="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-        รวมออเดอร์
-      </button>
-    </div>
+      <h1 class="mb-2">
+        ออเดอร์ของคุณ
+      </h1>
 
+      <div v-if="chosenMenuIsEmpty">
+        <small>
+          โปรดเลือกออเดอร์
+        </small>
+      </div>
+      <div v-else>
+        <chosen-menu
+          v-for="item in chosenMenu"
+          v-bind:menu="item"
+          v-bind:key="item.id">
+        </chosen-menu>
+      </div>
+
+      <input type="textarea" class="hidden" v-model="chosenMenuInText">
+
+      <div v-if="chosenMenuIsEmpty">
+        <button class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">
+          รวมออเดอร์
+        </button>
+      </div>
+      <div v-else>
+        <button type="button"
+                v-clipboard:copy="chosenMenuInText"
+                v-clipboard:success="onCopy"
+                v-clipboard:error="onError"
+                class="mt-4 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+          รวมออเดอร์
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -36,13 +66,15 @@
       template: `
         <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
           <img class="h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
-          <div class="text-left">
-            <div>{{ menu.name }}</div>
-            <div class="inline-flex transform scale-75">
+          <div class="text-left flex-grow">
+            <div class="mr-2">{{ menu.name }}</div>
+          </div>
+          <div class="text-right">
+            <div class="inline-flex text-xl">
               <button v-on:click="decrement" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
                 -
               </button>
-              <input v-model="menu.amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="จำนวน">
+              <input v-model="menu.amount" readonly class="text-center w-12 appearance-none py-2 px-3 text-gray-700 leading-tight[" type="text" placeholder="จำนวน">
               <button v-on:click="increment" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
                 +
               </button>
@@ -64,6 +96,28 @@
       }
     })
 
+    Vue.component('chosen-menu', {
+      props: ['menu'],
+      template: `
+        <div class="flex items-center my-1">
+          <button v-on:click="cancel" class="flex-shrink-0 mr-1 appearance-none bg-gray-300 hover:bg-gray-400 text-red-800 py-1 px-2 rounded font-bold">
+            X
+          </button>
+          <div class="w-full text-sm py-1 px-2">
+            {{ menu.name }}
+          </div>
+          <div class="flex-shrink-0 py-1 px-2">
+            x {{ menu.amount }}
+          </div>
+        </div>
+      `,
+      methods: {
+        cancel: function (event) {
+          this.menu.amount = 0
+        }
+      }
+    })
+
     var app = new Vue({
       el: '#app',
       data: {
@@ -74,8 +128,25 @@
         ]
       },
       methods: {
-        finalize: function (event) {
+        finalize: function (event) { },
+        onCopy: () => alert("คัดลอกเมนูแล้ว โปรดทำการวางในช่องแชทเพื่อสั่งอาหาร"),
+        onError: () => alert("คัดลอกเมนูไม่สำเร็จ! โปรดทำการจับภาพหน้าจอ แล้วอัปโหลดภาพในแชทเพื่อสั่งอาหาร"),
+      },
+      computed: {
+        chosenMenu: function () {
+          return this.menuList.filter((menu) => {
+            return menu.amount > 0
+          })
+        },
+        chosenMenuIsEmpty: function () {
+          return !this.chosenMenu || this.chosenMenu.length == 0
+        },
+        chosenMenuInText: function () {
+          const menus = this.chosenMenu.map((menu) => {
+            return `${menu.name} x ${menu.amount}`
+          })
 
+          return menus.join("\n")
         }
       }
     })
