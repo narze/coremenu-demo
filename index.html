@@ -14,61 +14,56 @@
       </div>
     </nav>
     <div class="bg-gray-200 px-4 py-2">
-      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
-        <img class="h-20 w-20 rounded mx-0 mr-2" src="/images/01.jpg">
-        <div class="text-left">
-          <div>หมูร้องไห้</div>
-          <div class="inline-flex transform scale-75">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
-              -
-            </button>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" class="amount" type="text" placeholder="จำนวน">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
-              +
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
-        <img class="h-20 w-20 rounded mx-0 mr-2" src="/images/02.jpg">
-        <div class="text-left">
-          <div>ตำข้าวโพด</div>
-          <div class="inline-flex transform scale-75">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
-              -
-            </button>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" class="amount" type="text" placeholder="จำนวน">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
-              +
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
-        <img class="h-20 w-20 rounded mx-0 mr-2" src="/images/03.jpg">
-        <div class="text-left">
-          <div>ตำทะเลปากเปิด</div>
-          <div class="inline-flex transform scale-75">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
-              -
-            </button>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" class="amount" type="text" placeholder="จำนวน">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
-              +
-            </button>
-          </div>
-        </div>
-      </div>
+      <menu-item
+        v-for="item in menuList"
+        v-bind:menu="item"
+        v-bind:key="item.id">
+      </menu-item>
     </div>
-
-    <span class="hidden">{{ message }}</span>
   </div>
 
   <script>
+    Vue.component('menu-item', {
+      props: ['menu'],
+      template: `
+        <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
+          <img class="h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
+          <div class="text-left">
+            <div>{{ menu.name }}</div>
+            <div class="inline-flex transform scale-75">
+              <button v-on:click="decrement" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                -
+              </button>
+              <input v-model="menu.amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="จำนวน">
+              <button v-on:click="increment" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+      `,
+      methods: {
+        increment: function (event) {
+          this.menu.amount += 1
+        },
+        decrement: function (event) {
+          this.menu.amount -= 1
+
+          if (this.menu.amount < 0) {
+            this.menu.amount = 0
+          }
+        },
+      }
+    })
+
     var app = new Vue({
       el: '#app',
       data: {
-        message: 'Hello Vue!'
+        menuList: [
+          { id: 1, name: "หมูร้องไห้", imageUrl: "/images/01.jpg", amount: 0 },
+          { id: 2, name: "ตำข้าวโพด", imageUrl: "/images/02.jpg", amount: 0 },
+          { id: 3, name: "ตำทะเลปากเปิด", imageUrl: "/images/03.jpg", amount: 0 },
+        ]
       }
     })
   </script>
