@@ -39,6 +39,7 @@
           v-bind:menu="item"
           v-bind:key="item.id">
         </chosen-menu>
+        <order-total v-bind:total="chosenMenuTotal"></order-total>
       </div>
 
       <input type="textarea" class="hidden" v-model="chosenMenuInText">
@@ -67,7 +68,8 @@
         <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
           <img class="h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
           <div class="text-left flex-grow">
-            <div class="mr-2">{{ menu.name }}</div>
+            <div>{{ menu.name }}</div>
+            <div class="text-gray-600 text-sm">{{ menu.price }}.-</div>
           </div>
           <div class="text-right">
             <div class="inline-flex text-xl">
@@ -104,7 +106,7 @@
             X
           </button>
           <div class="w-full text-sm py-1 px-2">
-            {{ menu.name }}
+            <span>{{ menu.name }}</span><span class="text-gray-600 text-xs ml-2">{{ menu.price }}.-</span>
           </div>
           <div class="flex-shrink-0 py-1 px-2">
             x {{ menu.amount }}
@@ -118,13 +120,22 @@
       }
     })
 
+    Vue.component('order-total', {
+      props: ['total'],
+      template: `
+        <div class="text-center my-2 mt-4">
+          <strong>รวม : {{ total }}.-</strong>
+        </div>
+      `
+    })
+
     var app = new Vue({
       el: '#app',
       data: {
         menuList: [
-          { id: 1, name: "หมูร้องไห้", imageUrl: "/images/01.jpg", amount: 0 },
-          { id: 2, name: "ตำข้าวโพด", imageUrl: "/images/02.jpg", amount: 0 },
-          { id: 3, name: "ตำทะเลปากเปิด", imageUrl: "/images/03.jpg", amount: 0 },
+          { id: 1, name: "หมูร้องไห้", imageUrl: "/images/01.jpg", amount: 0, price: 80 },
+          { id: 2, name: "ตำข้าวโพด", imageUrl: "/images/02.jpg", amount: 0, price: 45 },
+          { id: 3, name: "ตำทะเลปากเปิด", imageUrl: "/images/03.jpg", amount: 0, price: 200 },
         ]
       },
       methods: {
@@ -138,13 +149,19 @@
             return menu.amount > 0
           })
         },
+        chosenMenuTotal: function () {
+          return this.chosenMenu.map(menu => menu.price)
+                                .reduce((price, total) => total + price, 0)
+        },
         chosenMenuIsEmpty: function () {
           return !this.chosenMenu || this.chosenMenu.length == 0
         },
         chosenMenuInText: function () {
           const menus = this.chosenMenu.map((menu) => {
-            return `${menu.name} x ${menu.amount}`
-          })
+            return `${menu.name} (${menu.price}.-) x ${menu.amount}`
+          }) || []
+
+          menus.push(`\nรวม : ${this.chosenMenuTotal}.-`)
 
           return menus.join("\n")
         }
