@@ -4,7 +4,8 @@
   <title>ขอเมนู</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vue-clipboard2@0.3.1/dist/vue-clipboard.js"></script>
+  <script src="https://unpkg.com/vue-clipboard2@0.3.1/dist/vue-clipboard.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-tinybox"></script>
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
@@ -15,7 +16,31 @@
       </div>
     </nav>
 
+    <Tinybox
+      v-model="imageIndex"
+      :images="menuImages"
+      loop
+    ></Tinybox>
+
     <div class="bg-gray-200 px-4 py-2">
+      <h1 class="mb-2">
+        คลิกที่ภาพเพื่อดูเมนู
+      </h1>
+
+      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2">
+        <div class="grid grid-cols-4 gap-2">
+          <div v-for="(img, idx) in menuImages" class="border-2 overflow-hidden" style="max-height: 4rem">
+            <img
+              :src="img.thumbnail || img.src"
+              :alt="img.alt"
+              @click="imageIndex = idx">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-200 px-4 py-2">
+      <h2 class="mb-2">รายการอาหาร</h2>
       <menu-item
         v-for="item in menuList"
         v-bind:menu="item"
@@ -23,7 +48,7 @@
       </menu-item>
     </div>
 
-    <div class="bg-gray-200 px-4 pb-4">
+    <div class="bg-gray-200 px-4 py-2">
       <h1 class="mb-2">
         ออเดอร์ของคุณ
       </h1>
@@ -42,11 +67,15 @@
         <order-total v-bind:total="chosenMenuTotal"></order-total>
       </div>
 
-      <input type="textarea" class="hidden" v-model="chosenMenuInText">
+      <textarea v-model="chosenMenuInText" readonly class="my-2 w-full text-center appearance-none py-2 px-3 text-gray-700 leading-tight rounded">
+        {{
+          chosenMenuInText
+        }}
+      </textarea>
 
       <div v-if="chosenMenuIsEmpty">
-        <button class="mt-4 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">
-          รวมออเดอร์
+        <button class="my-2 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">
+          คัดลอกออเดอร์
         </button>
       </div>
       <div v-else>
@@ -54,8 +83,8 @@
                 v-clipboard:copy="chosenMenuInText"
                 v-clipboard:success="onCopy"
                 v-clipboard:error="onError"
-                class="mt-4 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-          รวมออเดอร์
+                class="mt-4 mb-2 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+          คัดลอกออเดอร์
         </button>
       </div>
     </div>
@@ -67,7 +96,7 @@
       template: `
         <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
           <div v-if="menu.imageUrl">
-            <img class="h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
+            <img class="border-2 h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
           </div>
           <div class="text-left flex-grow">
             <div>{{ menu.name }}</div>
@@ -96,7 +125,7 @@
           if (this.menu.amount < 0) {
             this.menu.amount = 0
           }
-        }
+        },
       }
     })
 
@@ -133,17 +162,25 @@
 
     var app = new Vue({
       el: '#app',
+      components: {
+        'Tinybox': window.Tinybox,
+      },
       data: {
+        menuImages: [...Array(17)].map((_, idx) => {
+          name = ("0"+ (idx + 1)).slice(-2)
+          return { src: `/images/${name}.jpg`, caption: name }
+        }),
         menuList: [
           { id: 1, name: "หมูร้องไห้", amount: 0, price: 80 },
-          { id: 2, name: "ตำข้าวโพด", imageUrl: "/images/02.jpg", amount: 0, price: 45 },
-          { id: 3, name: "ตำทะเลปากเปิด", imageUrl: "/images/03.jpg", amount: 0, price: 200 },
-        ]
+          { id: 2, name: "ตำข้าวโพด", amount: 0, price: 45 },
+          { id: 3, name: "ตำทะเลปากเปิด", amount: 0, price: 200 },
+        ],
+        imageIndex: null,
       },
       methods: {
         finalize: function (event) { },
-        onCopy: () => alert("คัดลอกเมนูแล้ว โปรดทำการวางในช่องแชทเพื่อสั่งอาหาร"),
-        onError: () => alert("คัดลอกเมนูไม่สำเร็จ! โปรดทำการจับภาพหน้าจอ แล้วอัปโหลดภาพในแชทเพื่อสั่งอาหาร"),
+        onCopy: () => alert("คัดลอกออเดอร์สำเร็จแล้ว โปรดทำการวาง (Paste) ในช่องแชทเพื่อสั่งอาหาร"),
+        onError: () => alert("คัดลอกออเดอร์ไม่สำเร็จ! โปรดทำการจับภาพหน้าจอ แล้วอัปโหลดภาพในแชทเพื่อสั่งอาหาร"),
       },
       computed: {
         chosenMenu: function () {
@@ -163,7 +200,9 @@
             return `${menu.name} (${menu.price}.-) x ${menu.amount}`
           }) || []
 
-          menus.push(`\nรวม : ${this.chosenMenuTotal}.-`)
+          if (menus.length) {
+            menus.push(`\nรวม : ${this.chosenMenuTotal}.-`)
+          }
 
           return menus.join("\n")
         }
