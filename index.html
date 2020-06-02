@@ -1,13 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My first Vue app</title>
+  <title>ขอเมนู</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/vue"></script>
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
   <div id="app">
-    {{ message }}
+    <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-3">
+      <div class="flex items-center flex-shrink-0 text-white mr-6">
+        <span class="font-semibold text-xl tracking-tight">ตำปากเปิด</span>
+      </div>
+    </nav>
+    <div class="bg-gray-200 px-4 py-2">
+      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
+        <img class="h-20 w-20 rounded mx-0 mr-2" src="/images/01.jpg">
+        <div class="text-left">
+          <div>หมูร้องไห้</div>
+          <div class="inline-flex transform scale-75">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+              -
+            </button>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" class="amount" type="text" placeholder="จำนวน">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
+        <img class="h-20 w-20 rounded mx-0 mr-2" src="/images/02.jpg">
+        <div class="text-left">
+          <div>ตำข้าวโพด</div>
+          <div class="inline-flex transform scale-75">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+              -
+            </button>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" class="amount" type="text" placeholder="จำนวน">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
+        <img class="h-20 w-20 rounded mx-0 mr-2" src="/images/03.jpg">
+        <div class="text-left">
+          <div>ตำทะเลปากเปิด</div>
+          <div class="inline-flex transform scale-75">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+              -
+            </button>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" class="amount" type="text" placeholder="จำนวน">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <span class="hidden">{{ message }}</span>
   </div>
 
   <script>
