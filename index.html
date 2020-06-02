@@ -66,7 +66,9 @@
       props: ['menu'],
       template: `
         <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2 flex">
-          <img class="h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
+          <div v-if="menu.imageUrl">
+            <img class="h-20 w-20 rounded mx-0 mr-2" v-bind:src="menu.imageUrl">
+          </div>
           <div class="text-left flex-grow">
             <div>{{ menu.name }}</div>
             <div class="text-gray-600 text-sm">{{ menu.price }}.-</div>
@@ -133,7 +135,7 @@
       el: '#app',
       data: {
         menuList: [
-          { id: 1, name: "หมูร้องไห้", imageUrl: "/images/01.jpg", amount: 0, price: 80 },
+          { id: 1, name: "หมูร้องไห้", amount: 0, price: 80 },
           { id: 2, name: "ตำข้าวโพด", imageUrl: "/images/02.jpg", amount: 0, price: 45 },
           { id: 3, name: "ตำทะเลปากเปิด", imageUrl: "/images/03.jpg", amount: 0, price: 200 },
         ]
