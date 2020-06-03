@@ -498,7 +498,7 @@
           })
         },
         chosenMenuTotal: function () {
-          return this.chosenMenu.map(menu => menu.price)
+          return this.chosenMenu.map(menu => menu.price * menu.amount)
                                 .reduce((price, total) => total + price, 0)
         },
         chosenMenuIsEmpty: function () {
