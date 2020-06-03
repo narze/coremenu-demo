@@ -50,6 +50,13 @@
 
     <div class="bg-gray-200 px-4 py-2">
       <h1 class="mb-2">
+        หมายเหตุ / เพิ่มเติม
+      </h1>
+      <textarea v-model="remarks" class="my-2 w-full text-center appearance-none py-2 px-3 text-gray-700 leading-tight rounded" placeholder="เช่น เผ็ดน้อย, ไม่ใส่ผัก หรือสั่งเมนูอื่นๆ"></textarea>
+    </div>
+
+    <div class="bg-gray-200 px-4 py-2">
+      <h1 class="mb-2">
         ออเดอร์ของคุณ
       </h1>
 
@@ -67,11 +74,7 @@
         <order-total v-bind:total="chosenMenuTotal"></order-total>
       </div>
 
-      <textarea v-model="chosenMenuInText" readonly class="my-2 w-full text-center appearance-none py-2 px-3 text-gray-700 leading-tight rounded">
-        {{
-          chosenMenuInText
-        }}
-      </textarea>
+      <textarea v-model="chosenMenuInText" readonly class="my-2 w-full text-center appearance-none py-2 px-3 text-gray-700 leading-tight rounded"></textarea>
 
       <div v-if="chosenMenuIsEmpty">
         <button class="my-2 w-full bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">
@@ -182,6 +185,7 @@
           { id: 9, name: "ลาบเห็ด", amount: 0, price: 60 },
         ],
         imageIndex: null,
+        remarks: null,
       },
       methods: {
         finalize: function (event) { },
@@ -207,6 +211,11 @@
           }) || []
 
           if (menus.length) {
+            if (this.remarks) {
+              menus.push(`\nหมายเหตุ / เพิ่มเติม :`)
+              menus.push(this.remarks)
+            }
+
             menus.push(`\nรวม : ${this.chosenMenuTotal}.-`)
           }
 
