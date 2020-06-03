@@ -41,14 +41,14 @@
     </div>
 
     <div class="bg-gray-200 px-4 py-2">
-      <h2 class="mb-2">รายการอาหาร</h2>
+      <h2 class="mb-2">รายการอาหาร <span class="text-gray-800 text-sm">({{ menuList.length }})</span></h2>
 
       <div v-for="section in sections" class="my-2">
         <div class="tab__header">
           <a href="#"
-            class="tab__link p-4 block bg-gray-500 no-underline flex justify-between rounded"
-            @click.prevent="section.active = !section.active">
-            <h2>{{ section.name }}</h2>
+             class="tab__link p-4 block bg-gray-500 no-underline flex justify-between rounded"
+             @click.prevent="section.active = !section.active">
+            <h2>{{ section.name }} <span class="text-gray-800 text-sm">({{ menuListBySection(menuList, section).length }})</span></h2>
             <span class="down-Arrow" v-show="!section.active">&#9660;</span>
             <span class="up-Arrow" v-show="section.active">&#9650;</span>
           </a>
