@@ -43,14 +43,23 @@
     <div class="bg-gray-200 px-4 py-2">
       <h2 class="mb-2">รายการอาหาร</h2>
 
-      <div v-for="section in sections">
-        <h3 class="mb-2">{{ section.name }}</h3>
-
-        <menu-item
-          v-for="item in menuListBySection(menuList, section)"
-          v-bind:menu="item"
-          v-bind:key="item.id">
-        </menu-item>
+      <div v-for="section in sections" class="my-2">
+        <div class="tab__header">
+          <a href="#"
+            class="tab__link p-4 block bg-gray-500 no-underline flex justify-between rounded"
+            @click.prevent="section.active = !section.active">
+            <h2>{{ section.name }}</h2>
+            <span class="down-Arrow" v-show="!section.active">&#9660;</span>
+            <span class="up-Arrow" v-show="section.active">&#9650;</span>
+          </a>
+        </div>
+        <div class="tab__content p-2" v-show="section.active">
+          <menu-item
+            v-for="item in menuListBySection(menuList, section)"
+            v-bind:menu="item"
+            v-bind:key="item.id">
+          </menu-item>
+        </div>
       </div>
     </div>
 
@@ -68,7 +77,7 @@
 
       <div v-if="chosenMenuIsEmpty">
         <small>
-          โปรดเลือกออเดอร์
+          โปรดเลือกออเดอร์ด้านบน
         </small>
       </div>
       <div v-else>
@@ -180,15 +189,15 @@
           return { src: `/images/${name}.jpg`, caption: name }
         }),
         sections: [
-          { id: 1, name: "ส้มตำ" },
-          { id: 2, name: "ตำเกาเหลา" },
-          { id: 3, name: "ตำถาด" },
-          { id: 4, name: "ยำ" },
-          { id: 5, name: "ลาบ" },
-          { id: 6, name: "ต้ม/แกง/นึ่ง" },
-          { id: 7, name: "ทอด/ย่าง" },
-          { id: 8, name: "กับข้าว/อาหารจานเดียว" },
-          { id: 9, name: "เครื่องดื่ม/ของหวาน" },
+          { id: 1, name: "ส้มตำ", active: true },
+          { id: 2, name: "ตำเกาเหลา", active: false },
+          { id: 3, name: "ตำถาด", active: false },
+          { id: 4, name: "ยำ", active: false },
+          { id: 5, name: "ลาบ", active: false },
+          { id: 6, name: "ต้ม/แกง/นึ่ง", active: false },
+          { id: 7, name: "ทอด/ย่าง", active: false },
+          { id: 8, name: "กับข้าว/อาหารจานเดียว", active: false },
+          { id: 9, name: "เครื่องดื่ม/ของหวาน", active: false },
         ],
         menuList: [
           { name: "ตำปูปลาร้า", price: 40, sectionId: 1 },
