@@ -23,24 +23,6 @@
     ></Tinybox>
 
     <div class="bg-gray-200 px-4 py-2">
-      <h1 class="mb-2">
-        คลิกที่ภาพเพื่อดูเมนู
-      </h1>
-
-      <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2">
-        <div class="grid grid-cols-4 gap-2">
-          <div v-for="(img, idx) in menuImages" class="border-2 overflow-hidden h-20 sm:h-32 md:h-48 lg:h-64 xl:h-auto bg-gray-400">
-            <img
-              :src="img.thumbnail || img.src"
-              :alt="img.alt"
-              @click="imageIndex = idx"
-              loading="lazy">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-gray-200 px-4 py-2">
       <h2 class="mb-2">รายการอาหาร <span class="text-gray-800 text-sm">({{ menuList.length }})</span></h2>
 
       <div v-for="section in sections" class="my-2">
@@ -59,6 +41,37 @@
             v-bind:menu="item"
             v-bind:key="item.id">
           </menu-item>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="bg-gray-200 p-4">
+      <div class="tab__header">
+        <a href="#"
+           class="tab__link p-4 block bg-gray-500 no-underline flex justify-between rounded"
+           @click.prevent="menuActive = !menuActive">
+          <h2>ภาพเมนู</h2>
+          <span class="down-Arrow" v-show="!menuActive">&#9660;</span>
+          <span class="up-Arrow" v-show="menuActive">&#9650;</span>
+        </a>
+      </div>
+      <div class="tab__content p-2" v-show="menuActive">
+        <h1 class="mb-2">
+          คลิกที่ภาพเพื่อดูเมนู
+        </h1>
+
+        <div class="block rounded text-gray-700 text-center bg-gray-400 px-2 py-2 my-2">
+          <div class="grid grid-cols-4 gap-2">
+            <div v-for="(img, idx) in menuImages" class="border-2 overflow-hidden h-20 sm:h-32 md:h-48 lg:h-64 xl:h-auto bg-gray-400">
+              <img
+                :src="img.thumbnail || img.src"
+                :alt="img.alt"
+                @click="imageIndex = idx"
+                loading="lazy">
+            </div>
+          </div>
         </div>
       </div>
     </div>
