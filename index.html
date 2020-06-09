@@ -201,8 +201,9 @@
           name = ("0"+ (idx + 1)).slice(-2)
           return { src: `/images/${name}.jpg`, caption: name }
         }),
+        menuActive: false,
         sections: [
-          { id: 1, name: "ส้มตำ", active: true },
+          { id: 1, name: "ส้มตำ", active: false },
           { id: 2, name: "ตำเกาเหลา", active: false },
           { id: 3, name: "ตำถาด", active: false },
           { id: 4, name: "ยำ", active: false },
