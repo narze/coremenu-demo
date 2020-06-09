@@ -503,7 +503,6 @@
         copiedMessage: "",
       },
       methods: {
-        finalize: function (event) { },
         onCopy() {
           const copiedMessage = "คัดลอกออเดอร์สำเร็จแล้ว โปรดปิดหน้านี้ แล้วทำการวาง (Paste) ในช่องแชทเพื่อสั่งอาหาร";
           alert(copiedMessage);
@@ -519,6 +518,8 @@
       },
       computed: {
         chosenMenu: function () {
+          this.copied = false
+
           return this.menuList.filter((menu) => {
             return menu.amount > 0
           })
