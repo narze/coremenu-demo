@@ -110,6 +110,11 @@
         </button>
       </div>
       <div v-else>
+        <div class="bg-gray-200 text-center" v-show="copied">
+          <div class="block rounded text-gray-700 text-center bg-red-400 px-2 py-2 my-2">
+            <p>{{ copiedMessage }}</p>
+          </div>
+        </div>
         <button type="button"
                 v-clipboard:copy="chosenMenuInText"
                 v-clipboard:success="onCopy"
@@ -494,10 +499,17 @@
         }),
         imageIndex: null,
         remarks: null,
+        copied: false,
+        copiedMessage: "",
       },
       methods: {
         finalize: function (event) { },
-        onCopy: () => alert("คัดลอกออเดอร์สำเร็จแล้ว โปรดทำการวาง (Paste) ในช่องแชทเพื่อสั่งอาหาร"),
+        onCopy() {
+          const copiedMessage = "คัดลอกออเดอร์สำเร็จแล้ว โปรดปิดหน้านี้ แล้วทำการวาง (Paste) ในช่องแชทเพื่อสั่งอาหาร";
+          alert(copiedMessage);
+          this.copied = true;
+          this.copiedMessage = copiedMessage;
+        },
         onError: () => alert("คัดลอกออเดอร์ไม่สำเร็จ! โปรดทำการจับภาพหน้าจอ แล้วอัปโหลดภาพในแชทเพื่อสั่งอาหาร"),
         menuListBySection: (menuList, section) => {
           return menuList.filter((menu) => {
